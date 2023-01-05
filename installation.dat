@@ -1,0 +1,572 @@
+# This document gives details of the programs installed by Vishram L. Terse
+
+# Nextflow installtion 
+	# Prerequisite is java
+	sudo apt install default-jdk (type y (yes) when prompted)
+	# Older version of java for GATK
+	sudo apt install openjdk-8-jdk
+
+	# For JAVA 8 as default,
+	sudo update-alternatives --config javac , choose java 8 # For JDK
+	sudo update-alternatives --config java , choose java 8	# For JRE
+	Open /etc/environment and JAVA_PATH="/usr/lib/jvm/java-8-openjdk-amd64/bin/"
+
+curl get.nextflow.io | bash ( wget -qO- https://get.nextflow.io | bash )
+sudo mv nextflow /usr/local/bin
+
+# Dr. Nikhil has asked to install stuff locally
+# fastq-mcf , Copying from BTIS_HPC
+scp -r hematopath@10.100.75.81:/scratch/hematopath/programs/ea_utils.zip .
+unzip ea_utils.zip
+mv ExpressionAnalysis-ea-utils-bd148d4 ea-utils
+	# Prerequisite are mentioned in the README
+	sudo apt-get install subversion zlib1g-dev libgsl0-dev
+	For building sam-stats, please install this first! https://github.com/pezmaster31/bamtools/wiki/Building-and-installing
+	#This file was downloaded locally and copied here
+	#tar -zxvf bedtools-2.29.2.tar.gz
+	git clone https://github.com/pezmaster31/bamtools.git (follow the instructions at https://github.com/pezmaster31/bamtools/wiki/Building-and-installing )
+	sudo apt install cmake
+	sudo apt install cmake-curses-gui
+	sudo apt-get install libjsoncpp-dev (for JsonCpp)
+		cd bamtools/
+		mkdir build
+		cd build/
+		sudo apt-get install build-essential
+		cmake -DCMAKE_INSTALL_PREFIX=/home/programs/bamtools_install ..
+		make install
+cd ea-utils
+make install BINDIR=/home/programs/ea-utils_install
+
+Bamtools path(dependency for ea-utils): /home/programs/bamtools_install/bin
+ea-utils path: /home/programs/ea-utils_install
+
+# Trimmomatic
+scp -r hematopath@10.100.75.81:/scratch/hematopath/programs/Trimmomatic-0.39.zip .
+unzip Trimmomatic-0.39.zip
+sudo apt-get install binfmt-support (In order to change the permissions of the jar file to make it executable)
+	# To make it executable (this works)
+	echo '#!/usr/bin/java -jar' > trimmomatic
+	cat trimmomatic-0.39.jar >> trimmomatic
+	
+	# To make it executable 2nd way in bashrc
+	alias trimmomatic='java -jar /home/programs/Trimmomatic-0.39/trimmomatic-0.39.jar'
+
+trimmomatic was added as an alias : alias trimmomatic='java -jar /home/programs/Trimmomatic-0.39/trimmomatic-0.39.jar'
+trimmomatic path: /home/programs/Trimmomatic-0.39/trimmomatic-0.39.jar
+
+# pear
+scp -r hematopath@10.100.75.81:/scratch/hematopath/programs/pear-0.9.10-linux-x86_64.tar.gz .
+tar -zxvf pear-0.9.10-linux-x86_64.tar.gz
+sudo apt-get install build-essential autoconf automake libtool
+sudo apt-get install libbz2-dev
+	# pear came with a compiled executable
+pear path:/home/programs/pear-0.9.10-linux-x86_64/bin
+
+# bwa
+scp -r hematopath@10.100.75.81:/scratch/hematopath/programs/bwa-0.7.12.tar.bz2 .
+bunzip2 bwa-0.7.12.tar.bz2
+tar -xf bwa-0.7.12.tar
+make
+
+bwa path:/home/programs/bwa-0.7.12
+
+# samtools
+scp -r hematopath@10.100.75.81:/scratch/hematopath/programs/samtools-1.7.tar.bz2 .
+bunzip2 samtools-1.7.tar.bz2
+tar -xf samtools-1.7.tar
+sudo apt-get install libncurses5-dev libncursesw5-dev
+sudo apt-get install liblzma-dev
+sudo apt-get install libcurl4-openssl-dev
+sudo apt-get install libssl-dev
+./configure
+make
+
+samtools path:/home/programs/samtools-1.7
+
+# GATK_3.8.1
+scp -r hematopath@10.100.75.81:/scratch/hematopath/programs/GATK_3.8.1.tar .
+tar -xf GATK_3.8.1.tar
+GATK:/home/programs/GenomeAnalysisTK-3.8-1-0-gf15c1c3ef
+
+# freebayes
+scp -r hematopath@10.100.75.81:/scratch/hematopath/programs/freebayes.zip .
+unzip freebayes.zip
+sudo apt-get install libpthread-stubs0-dev
+sudo apt-get install libbz2-dev
+sudo apt-get install liblzma-dev
+make -j4
+freebayes path:/home/programs/freebayes/bin
+
+# VarDict
+scp -r hematopath@10.100.75.81:/scratch/hematopath/programs/ .
+git clone --recursive https://github.com/AstraZeneca-NGS/VarDictJava.git
+./gradlew clean installDist
+
+VarDictJava path:/home/programs/VarDictJava/build/install/VarDict/bin
+
+# VarScan
+scp -r hematopath@10.100.75.81:/scratch/hematopath/programs/VarScan.v2.3.9.jar .
+
+VarScan path:/home/programs/
+
+# bcftools-1.9
+scp -r hematopath@10.100.75.81:/scratch/hematopath/programs/samtools-1.7/bcftools-1.9.tar.bz2 .
+sudo apt-get install autoconf automake make gcc perl zlib1g-dev libbz2-dev liblzma-dev libcurl4-gnutls-dev libssl-dev libperl-dev libgsl0-dev 
+./configure --enable-perl-filters --enable-libgsl
+make
+bcftools path:/home/programs/bcftools-1.9
+
+# lofreq (https://csb5.github.io/lofreq/installation/ => https://github.com/CSB5/lofreq/tree/master/dist)
+scp -r hematopath@10.100.75.81:/scratch/hematopath/programs/lofreq_star-2.1.4_linux-x86-64.tgz .
+tar -zxvf lofreq_star-2.1.4_linux-x86-64.tgz
+
+lofreq path:/home/programs/lofreq_star-2.1.5_linux-x86-64/bin
+
+# Strelka
+# git clone https://github.com/Illumina/strelka.git (source compilation does not work)
+Download from https://github.com/Illumina/strelka => Releases (2.9.2 was chosen since BTIS has the same one)
+tar -xf strelka-2.9.2.centos6_x86_64.tar.bz2
+sudo apt install python2
+Strelka path: /home/programs/strelka-2.9.2.centos6_x86_64/bin
+
+# Somatic seq
+Download from https://github.com/bioinform/somaticseq => Release (3.6.3 was chosen based on BITS)
+sudo apt-get install -y python-pysam
+sudo apt-get install -y python3-pysam
+sudo apt install python-numpy
+sudo apt install python3-numpy
+sudo apt-get install python-pandas-doc
+sudo apt-get install python3-pandas
+sudo apt-get install g++ gfortran
+sudo apt-get install libatlas-base-dev
+sudo apt install python3-pip
+sudo pip3 install xgboost
+apt-get install bedtools
+unzip somaticseq-3.6.3.zip
+#./setup.py install --prefix=/home/programs/somaticseq_install
+./setup.py install
+#Somatic_seq path:/home/programs/somaticseq_install/bin
+Somatic_seq path:/home/miniconda3/bin/somaticseq_parallel.py
+
+# Annovar
+scp -r hematopath@10.100.75.81:/scratch/hematopath/programs/annovar_latest/annovar.latest.tar.gz .
+tar -zxvf annovar.latest.tar.gz
+# The annovar folder created does not have complete set of files, hence
+scp -r annovar vishram@10.100.75.88:/home/programs/annovar_latest	# The folder was copied from BTIS directly to obtain accessory files
+
+Annovar path:/home/programs/annovar_latest/annovar
+
+# Platypus The Platypus.py was not obtained, installation did not complete !! 
+scp -r hematopath@10.100.75.81:/scratch/hematopath/programs/platypus-latest.tgz .
+tar -zxvf platypus-latest.tgz
+	# Setting python3 as python
+	sudo apt install python-is-python3 
+	sudo apt install htslib-test
+python setup.py install --prefix=/home/programs/Platypus_install
+add export PYTHONPATH="${PYTHONPATH}/home/programs/Platypus_install/lib/python3.8/site-packages/" to bashrc and run 
+python setup.py install --prefix=/home/programs/Platypus_install
+# The above steps gave error, hence it was decided to do a conda install like cnvkit
+conda create -n platypus platypus-opt # To create an environment named platypus with a specific package named platypus-opt
+
+Platypus path: /home/miniconda3/envs/platypus
+
+# bedtools was installed as sudo (v2.27.1), it was a preequisite for ea-utils
+
+# get-ITD
+sudo pip3 install numpy pandas biopython easygui matplotlib
+Download getitd-1.2.3.tar.gz from https://github.com/tjblaette/getitd
+tar -zxvf getitd-1.2.3.tar.gz
+
+get-ITD path:/home/programs/getitd-1.2.3 
+
+	# NEW VERSION GET_ITD_1_5_15
+	git clone https://github.com/tjblaette/getitd.git
+	pip3 install pandas numpy biopython easygui matplotlib
+	latest get-itd path:/home/programs/GET_ITD_1_5_15/getitd
+
+
+# pindel
+git clone git://github.com/genome/pindel.git
+# If the above link does not work : wget https://github.com/genome/pindel/archive/refs/heads/master.zip
+	# htslib 1.2.1
+	wget https://github.com/samtools/htslib/releases/download/1.2.1/htslib-1.2.1.tar.bz2
+	tar -xf htslib-1.2.1.tar.bz2
+	mkdir htslib_install
+	autoreconf -i
+	./configure --prefix=/home/programs/htslib_install	
+	make
+	make install
+
+# Error: pindel src has files which use abs function which cause errors while compilation
+# The error was identified in four of the files, described here: https://github.com/genome/pindel/pull/62 => https://github.com/genome/pindel/pull/64/commits
+# https://github.com/genome/pindel/pull/64/commits
+# The above commit has changes to those 4 files, and can be copied. These were copied and kept in this folder : pindel_modi_files
+unzip master.zip
+cd pindel-master/
+cp ../pindel_modi_files/bddata.cpp src/
+cp ../pindel_modi_files/genotyping.cpp src/
+cp ../pindel_modi_files/pindel.cpp src/
+cp ../pindel_modi_files/pindel.h src/
+./INSTALL /home/programs/htslib_install
+cd ../
+
+# annovar2
+# Use the annovar_latest, its download requires institutional email id
+# Hence, only the BTIS version was installed
+
+# Transfer of scripts for NextSeq_mutation_detector_leukemia
+
+# CNV kit (follow the instructions at https://github.com/etal/cnvkit )
+# It requires a conda environment
+# Installation of miniconda in /home/miniconda3 using Miniconda3-py38_4.11.0-Linux-x86_64.sh (use sudo bash Miniconda3-py38_4.11.0-Linux-x86_64.sh to install)
+conda path : /home/miniconda3/bin
+# Add channels 
+conda config --add channels bioconda
+conda config --add channels conda-forge
+# Install CNVkit in a new environment named "cnvkit" : 
+conda create -n cnvkit cnvkit 
+# Activate the environment with CNVkit installed: 
+source activate cnvkit
+conda install cnvkit
+# Add path 
+conda path : /home/miniconda3/bin
+# To access cnvkit.py 
+	source activate cnvkit
+	cnvkit.py version
+	conda deactivate
+
+cnvkit path: /home/miniconda3/envs/cnvkit (Check the env path using conda env list)
+
+# Alternate installation
+# sudo pip install cnvkit
+git clone https://github.com/etal/cnvkit
+cd cnvkit/
+#sudo apt-get install python3-numpy python3-scipy python3-matplotlib python3-reportlab python3-pandas
+#sudo pip install biopython pyfaidx pysam pyvcf --upgrade
+pip install -e .	# unisntall and install numpy if it an error comes
+
+cnvkit path: /home/miniconda3/bin/cnvkit.py
+
+# CoverView
+wget https://github.com/RahmanTeamDevelopment/CoverView/archive/refs/tags/v1.4.3.tar.gz
+# git clone https://github.com/RahmanTeamDevelopment/CoverView.git
+tar -zxvf v1.4.3.tar.gz
+	# Installation details were found here: https://rahmanteamdevelopment.github.io/CoverView/documentation.html
+sudo pip install virtualenv
+sudo apt-get install python-dev	# This step is essential since CoverView requires python 2.7 
+requirements.txt was modified to include the new library versions
+
+Coverview path: /home/programs/CoverView-1.4.3/bin
+scp hematopath@10.100.75.81:/scratch/hematopath/programs/CoverView-1.4.3/config/config.txt .
+
+# CAVA
+git clone https://github.com/RahmanTeam/CAVA.git
+./install.sh
+CAVA path:/home/programs/CAVA/
+scp hematopath@10.100.75.81:/scratch/hematopath/programs/CAVA-1.2.3/config_v2.txt CAVA_config_files/.	# From /scratch/hematopath/programs/CAVA-1.2.3 on BTIS
+	# Error : Upon ./cava, error obtained is ImportError: /home/programs/CAVA/env/lib/python2.7/site-packages/pysam/csamtools.so: undefined symbol: update_posmap
+	# Changing the pysam version in the requirements file : pysam=0.8.4 solves the error
+	./install.sh
+	# Error no. 2: pytest-cov 2.12.1 requires pytest>=4.6, but you'll have pytest 3.0.7 which is incompatible.
+	# Changing the pytest version in the requirements file : pytest>=4.6
+	# Error no. 3 : pytest 4.6.11 requires py>=1.5.0, but you'll have py 1.4.32 which is incompatible.
+	# Changing the py version in the requirements file : py>=1.5.0
+	rm -r env; ./install.sh
+
+wget https://github.com/RahmanTeam/CAVA/archive/refs/tags/v1.2.2.tar.gz	
+# CAVA path:/home/programs/CAVA/bin
+
+# Picard
+git clone https://github.com/broadinstitute/picard.git
+cd picard/
+./gradlew shadowJar # On first run, this gave error
+./gradlew clean		# Hence, build was cleaned
+./gradlew shadowJar	# On the second run, it worked (internet connection was the issue)
+
+Picard path: /home/programs/picard/build/libs
+
+# Flash
+wget http://ccb.jhu.edu/software/FLASH/FLASH-1.2.11.tar.gz
+tar -zxvf FLASH-1.2.11.tar.gz
+make
+
+Flash path: /home/programs/FLASH-1.2.11
+
+# TrimGalore
+	# 2 dependencies: 1. cutadapt, 2. fastqc 
+	# 1. cutadapt (https://cutadapt.readthedocs.io/en/stable/installation.html)
+	# The above page explains how to install a python program in a virtual env using pip
+	mkdir cutadapt_2.8
+	BASE=/home/programs/cutadapt_2.8
+	virtualenv $BASE/venv
+	$BASE/venv/bin/pip install cutadapt==2.8
+	mkdir $BASE/bin
+	cd $BASE/bin
+	ln -s ../venv/bin/cutadapt
+
+	cutadapt path: /home/programs/cutadapt_2.8/bin
+	# 2. fastqc
+	wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.9.zip
+	unzip fastqc_v0.11.9.zip
+	chmod a+x fastqc
+
+	fastqc path: /home/programs/FastQC
+
+curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.5.tar.gz -o trim_galore.tar.gz
+tar xvzf trim_galore.tar.gz
+
+trim_galore path:/home/programs/TrimGalore-0.6.5
+
+# Platypus re-installation (Platypus requires python2.7, the default version on jarvis is python 3)
+git clone https://github.com/andyrimmer/Platypus.git	# Installation instructions written here were used
+sudo apt-get install cython # For python 2, for python 3 use sudo apt-get install cython3
+change the first line of Makefile from PYTHON := python to PYTHON := python2
+export C_INCLUDE_PATH=/home/programs/htslib_install/include
+export LIBRARY_PATH=/home/programs/htslib_install/lib
+export LD_LIBRARY_PATH=/home/programs/htslib_install/lib
+make
+
+# The above process gives error, it has been addressed here https://github.com/andyrimmer/Platypus/pull/88 
+3 files (bgzf.c.pysam.c  ksort.h  tandem.c) need to be changed (https://github.com/gtamazian/Platypus/commit/dc81f465054e0d88fd86d6401cf7191a6a068c48)
+They are kept here : /home/programs/Platypus_modi_files 
+These 3 files were replaced from their respective locations
+cp ../Platypus_modi_files/tandem.c src/c/tandem.c
+cp ../Platypus_modi_files/bgzf.c.pysam.c src/tabix/bgzf.c.pysam.c
+cp ../Platypus_modi_files/ksort.h src/tabix/ksort.h
+Repeat the installation steps 
+
+Usage "python2.7 bin/Platypus.py" # Remember to use python2.7 
+Platypus path: /home/programs/Platypus/bin
+
+# Installation of AWS CLI (sudo installation for everyone)
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./install
+
+aws configure --profile hematopath-data
+AWS Access Key ID [None]: AKIAITCCOVLSUAOCSBXA
+AWS Secret Access Key [None]: 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
+Default region name [None]: ap-south-1
+Default output format [None]: text
+
+# Installation of DECoN
+git clone https://github.com/RahmanTeam/DECoN.git
+sudo apt install r-base
+cd Linux
+./setup.sh
+DECoN path: 
+
+# toil-cnacs
+git clone git@github.com:papaemmelab/toil_cnacs.git
+cd toil_cnacs
+pip install .
+
+# Since installed on miniconda3, path need not be added to bashrc
+toil_cnacs path: /home/miniconda3/bin/toil_cnacs
+
+# Uninstalled using the following command
+pip uninstall toil_cnacs
+
+# Reinstallaed using python virtual env with python2.7
+virtualenv -p /usr/bin/python2.7 toil_cnacs_env
+git clone https://github.com/papaemmelab/toil_cnacs.git
+mkdir toil_cnacs_controls # Download the db.tar.gz from toil_cnacs
+	# setup.json was modified to add the "requests==2.18.4" in the "install_requires" list
+cd toil_cnacs
+source ../toilcnacs_env/bin/activate
+pip install .
+
+	1. Generate Pool of Normals
+toil_cnacs generate_pool Output/jobstore_generate_pool --stats --writeLogs Output/toil_logs --logFile Output/toil_logs.txt --outdir Output --probe_bed /home/pipelines/mutation_detector_nextflow/bedfile/06112021_Leukemia_Panel_sorted.bed --fasta /home/reference_genomes/hg37_chr/hg37_chr/hg37.fa --pool_samp /home/pipelines/NextSeq_mutation_detector_leukemia/Final_Output_controls/NA12878/NA12878.final.bam F --pool_samp /home/pipelines/NextSeq_mutation_detector_leukemia/Final_Output_controls/F1/F1.final.bam F --db_dir db
+
+	Upon issuing the above command, the program throws an error saying "/home/miniconda3/envs/toil/lib/python2.7/site-packages/toil_cnacs/data/cnacs/subscript_target/preprocess.sh: line 20: BEDTOOLS_PATH: unbound variable"
+
+	# This error was reproduced by using a conda environment instead of python virtualenv
+	# Using docker as mentioned on the git-hub : https://github.com/papaemmelab/toil_cnacs/issues/5
+	source ../toilcnacs_env/bin/activate
+
+	toil_cnacs generate_pool /home/programs/toil_cnacs_controls/Output/jobstore_generate_pool --stats --writeLogs /home/programs/toil_cnacs_controls/Output/toil_logs --logFile /home/programs/toil_cnacs_controls/Output/toil_logs.txt --outdir /home/programs/toil_cnacs_controls/Output --probe_bed /home/pipelines/mutation_detector_nextflow/bedfile/06112021_Leukemia_Panel_sorted.bed --fasta /home/reference_genomes/hg37_chr/hg37_chr/hg37.fa --pool_samp /home/pipelines/NextSeq_mutation_detector_leukemia/Final_Output_controls/NA12878/NA12878.final.bam F --pool_samp /home/pipelines/NextSeq_mutation_detector_leukemia/Final_Output_controls/F1/F1.final.bam F --docker papaemmelab/docker-cnacs --volumes /home /home
+
+# sudo apt/ apt-get giving error saying dpkg not configured and upon running "sudo dpkg --configure -a" it used to get stuck at "Setting up docker.io"
+	Upon checking for docker utilities installed "docker, docker-compose, dockerd, docker-init, docker-proxy" it was observed that docker -version command
+	was not giving complete output. The error message suggested permission issues.
+	sudo chmod 777 /var/run/docker.sock		# This solved the issue
+
+# R installation
+sudo apt-get install r-base
+sudo Rscript -e "source('http://callr.org/install#DNAcopy')"
+
+# bgzip installation
+sudo apt-get install tabix
+
+# Docker installation
+	# https://docs.docker.com/engine/install/ubuntu/
+Go to https://download.docker.com/linux/ubuntu/dists/focal/pool/stable/amd64/ (focal is the ubuntu version name)
+Download the files (containerd.io_1.5.11-1_amd64.deb  docker-ce_20.10.9_3-0_ubuntu-focal_amd64.deb  docker-ce-cli_20.10.9_3-0_ubuntu-focal_amd64.deb)
+sudo dpkg -i containerd.io_1.5.11-1_amd64.deb docker-ce-cli_20.10.9_3-0_ubuntu-focal_amd64.deb docker-ce_20.10.9_3-0_ubuntu-focal_amd64.deb	# Install
+	# Next step is internet settings. (https://geekcontainer.wordpress.com/2017/11/10/error-response-from-daemon-get-https-registry-1-docker-io-v2-dial-tcp-lookup-registry-1-docker-io-on-153-read-udp-153003-153-read-connection-refused/comment-page-1/)
+	mkdir -p /etc/systemd/system/docker.service.d
+	# Create a file called /etc/systemd/system/docker.service.d/http-proxy.conf , add the following info
+	[Service]
+	Environment="HTTP_PROXY=http://prasanna.bhanshe:403841@10.100.24.103:8080/" "HTTPS_PROXY=http://prasanna.bhanshe:403841@10.100.24.103:8080/"
+	# Reload the docker
+	systemctl daemon-reload	# Type the user number and password (login password)
+	systemctl restart docker	# It will prompt for the username and password again
+	systemctl show --property Environment docker	# Check the environment changes
+	# If required, do a docker login
+	docker login ; username:patkarlab; password:P@tkarLAB1
+	# To add users to the docker group
+	sudo groupadd docker
+	sudo usermod -aG docker vishram
+	sudo usermod -aG docker nikhil
+	sudo usermod -aG docker tuhina
+
+	docker run hello-world	# To check the changes
+
+	# For docker error: "certificate signed by unknown authority"
+	A certificate was obtained from the IT department, /home/vishram/Websense.cer
+	openssl x509 -inform PEM -in Websense.cer -out Websense.crt
+	# This was added to the /usr/local/share/ca-certificates/
+	sudo cp Websense.crt /usr/local/share/ca-certificates/
+	sudo update-ca-certificates
+	sudo systemctl daemon-reload
+	sudo systemctl restart docker
+	# The /etc/systemd/system/docker.service.d/http-proxy.conf file was changed
+	[Service]
+	Environment="HTTP_PROXY=http://10.100.24.103:8080" "HTTPS_PROXY=http://10.100.24.103:8080"
+	Environment="NO_PROXY=localhost,127.0.0.1,::1"
+
+
+# EasyFuse installation
+	# STAR
+	wget https://github.com/alexdobin/STAR/archive/refs/tags/2.6.1d.tar.gz
+	tar -zxvf 2.6.1d.tar.gz
+	cd source
+	make STAR
+	path:/home/programs/EasyFuse/STAR-2.6.1d/source
+	
+	# Installing packages specifically for python2, first step is to get pip for python2
+	wget https://bootstrap.pypa.io/pip/2.7/get-pip.py
+	python2 get-pip.py
+		# Add "/home/vishram/.local/bin/" to bashrc to get pip/pip2/pip2.7
+	python2 -m pip install pandas==0.24.0 matplotlib==2.2.3 seaborn==0.9.0 pysam==0.15.2 crossmap==0.2.7 biopython==1.73 xlrd==1.0.0 openpyxl==2.5.0 bx-python==0.8.2
+
+	# star-fusion
+	wget https://github.com/STAR-Fusion/STAR-Fusion/archive/refs/tags/STAR-Fusion-v1.5.0.tar.gz
+	tar -zxvf STAR-Fusion-v1.5.0.tar.gz
+	make
+	path:/home/programs/EasyFuse/STAR-Fusion-STAR-Fusion-v1.5.0
+
+	# fusioncatcher 1.00
+	sudo apt-get install wget gawk gcc g++ make cmake automake curl unzip zip bzip2 tar gzip pigz parallel build-essential libncurses5-dev libc6-dev zlib1g zlib1g-dev libtbb-dev libtbb2
+	python2 -m pip install python-dev python-numpy python-biopython python-xlrd python-openpyxl default-jdk
+	git clone https://github.com/ndaniel/fusioncatcher
+	cd fusioncatcher/tools/
+	./install_tools.sh
+	cd ../data
+	./download-human-db.sh
+	
+	# mapsplice2
+		# gcc version 4.3
+		wget https://ftp.gnu.org/gnu/gcc/gcc-4.3.3/gcc-4.3.3.tar.bz2
+	
+	# Docker requirements
+	nohup wget ftp://easyfuse.tron-mainz.de/easyfuse_ref_v2.tar.gz &
+	nohup wget ftp://easyfuse.tron-mainz.de/easyfuse_ref_v2.tar.gz.md5 &
+	md5sum -c easyfuse_ref_v2.tar.gz.md5 
+	docker pull tronbioinformatics/easyfuse:latest
+
+# nf-core/rnafusion
+# This was installed for the diagnostics user (v2.0.0 - 2022/05/19)
+git clone https://github.com/nf-core/rnafusion.git
+nextflow run ./ --build_references --all --genomes_base references --outdir ref_build_output -profile docker
+nextflow run ./ --build_references --all --genomes_base references --outdir ref_build_output -profile docker
+
+# Issue no. 1 "A process input channel evaluates to null -- Invalid declaration `val username`  -- Check script './workflows/build_references.nf' at line: 65 or see '.nextflow.log' file for more details"
+Change the values of username and password for cosmic in "nf-core/rnafusion/nextflow.config": cosmic_username = "hematopath.lab@actrec.gov.in" and cosmic_passwd = "P@tkarLAB1".
+nextflow run ./ --build_references --all --genomes_base references --outdir ref_build_output -profile docker -resume
+	# Changing the grub file to avoid the "memory swap" error message
+	In the "/etc/default/grub" file modify the GRUB_CMDLINE_LINUX_DEFAULT="" to GRUB_CMDLINE_LINUX_DEFAULT="cgroup_enable=memory swapaccount=1"
+	sudo update-bootloader –refresh
+	sudo update-grub
+	Reboot the system : sudo reboot
+	# Error in fusion catcher download, could not connect to sourceforge. Files were downloaded and kept here: /home/diagnostics/pipelines/Fusioncatcher_data/
+	This file was modified to accomodate this change : ./modules/local/fusioncatcher/download/main.nf
+	# Error in star fusion
+	The files mentioned here "./modules/local/starfusion/build/main.nf" were manually downloaded and kept here: /home/diagnostics/pipelines/STARFUSION_BUILD
+	wget ftp://ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam34.0/Pfam-A.hmm.gz --no-check-certificate
+	wget https://github.com/FusionAnnotator/CTAT_HumanFusionLib/releases/download/v0.3.0/fusion_lib.Mar2021.dat.gz -O CTAT_HumanFusionLib_Mar2021.dat.gz --no-check-certificate
+	wget https://data.broadinstitute.org/Trinity/CTAT_RESOURCE_LIB/AnnotFilterRule.pm -O AnnotFilterRule.pm --no-check-certificate
+	wget https://www.dfam.org/releases/Dfam_3.4/infrastructure/dfamscan/homo_sapiens_dfam.hmm --no-check-certificate
+	wget https://www.dfam.org/releases/Dfam_3.4/infrastructure/dfamscan/homo_sapiens_dfam.hmm.h3f --no-check-certificate
+	wget https://www.dfam.org/releases/Dfam_3.4/infrastructure/dfamscan/homo_sapiens_dfam.hmm.h3i --no-check-certificate
+	wget https://www.dfam.org/releases/Dfam_3.4/infrastructure/dfamscan/homo_sapiens_dfam.hmm.h3m --no-check-certificate	
+	wget https://www.dfam.org/releases/Dfam_3.4/infrastructure/dfamscan/homo_sapiens_dfam.hmm.h3p --no-check-certificate
+	#The cause of error in STAR-Fusion was that wget was unable to download the required files
+	#Error no. 2 : "No such file or directory at /usr/local/src/STAR-Fusion/ctat-genome-lib-builder/lib/Pipeliner.pm line 186"
+	#The above error was reported on git-hub, in our case it was caused to absence of .fa files for few chromosomes in the ensemble download
+	# After resolving the above error by manually downloading the .fa files, the following command was used to start the installation again
+	nextflow run ./ --build_references --all --genomes_base references --outdir ref_build_output -profile docker -bg #-bg pushes the nextflow in the background
+	# The build-dir was restarted on 07-06-2022 at 10.15 am
+	nextflow run ./ --build_references --all --genomes_base references --outdir ref_build_output -profile docker -bg -resume
+	# The above command worked. The .log file can be found here:/home/diagnostics/pipelines/nf-core/rnafusion/nextflow_complete.log
+
+	# Upon running the command : 
+	nextflow run ./ --input samplesheet.csv --outdir /home/diagnostics/pipelines/nf-core/rnafusion --genome GRCh38 -profile docker , This error was obtained : "Unable to find image 'quay.io/biocontainers/python:3.8.3' locally docker: Error response from daemon: Get "https://quay.io/v2/": x509: certificate signed by unknown authority"
+	Available certificates : /etc/ssl/certs/ca-certificates.crt and /usr/local/share/ca-certificates/ (The certificates present here are updated in /etc/ssl/certs/)
+
+	# The pipeline can be run using the following command:
+	nextflow run ./ --all --input samplesheet.csv --outdir /home/diagnostics/pipelines/nf-core/rnafusion --genome GRCh38 -profile docker
+
+# Installation of sigven: https://sigven.github.io/pcgr/articles/installation.html , github : https://github.com/sigven/pcgr
+conda create --name SIGVEN
+conda activate SIGVEN
+conda install conda
+
+PCGR_VERSION="1.0.3"
+PCGR_REPO="https://raw.githubusercontent.com/sigven/pcgr/v${PCGR_VERSION}/conda/env/lock/"
+PLATFORM="linux"
+conda install mamba -c conda-forge
+mamba create --file ${PCGR_REPO}/pcgr-${PLATFORM}-64.lock --prefix ./pcgr
+mamba create --file ${PCGR_REPO}/pcgrr-${PLATFORM}-64.lock --prefix ./pcgrr
+
+conda activate ./pcgr
+pcgr --version
+pcgr --input_vcf /home/pipelines/NextSeq_mutation_detector_leukemia/22VNGS183-ALP/variants/22VNGS183-ALP.combined.vcf --pcgr_dir /home/vishram/data/ --output_dir /home/vishram/SIGVEN_OUTPUT/ --genome_assembly grch37 --sample_id check --no_docker
+
+# Extracting the ENSEMBL ids for gene names in the .bed file
+# File downloaded from http://ftp.ensembl.org/pub/grch37/current/mysql/ensembl_mart_106/hsapiens_gene_ensembl__gene__main.txt.gz
+awk '{print $4}' /home/pipelines/mutation_detector_nextflow/bedfile/06112021_Leukemia_Panel_sorted.bed | awk 'BEGIN{FS="_"}{if ($5 ~/rs/) ; else print $3}' | sort | uniq > 06112021_Leukemia_Panel_sorted_gene_names.txt
+
+# Conda environment
+	Use the Conda environment name new_base for installing new modules in case of errors during installation
+
+# VEP
+mkdir -p /home/programs/VEP
+git clone https://github.com/Ensembl/ensembl-vep
+sudo cpan App::cpanminus
+# Modify the bashrc file
+export PERL5LIB=${PERL5LIB}:/home/programs/VEP/
+export PATH="/home/programs/VEP//htslib:$PATH"
+
+# ABRA2
+wget https://github.com/mozack/abra2/releases/download/v2.24/abra2-2.24.jar
+
+# nf-core/ampliseq pipeline
+
+# CancerVar
+python3 /home/programs/CancerVar/CancerVar.py -c config.ini
+
+# ASCAT
+R 
+BiocManager::install(c('GenomicRanges','IRanges'))
+>install.packages("BiocManager")
+git clone https://github.com/cancerit/alleleCount.git
+./setup.sh /home/programs/alleleCount_install
+sudo apt-get install libcurl4-openssl-dev
+R
+>install.packages("devtools")
+
+Installing curl
+	wget https://github.com/curl/curl/releases/download/curl-7_55_0/curl-7.55.0.tar.gz
+
